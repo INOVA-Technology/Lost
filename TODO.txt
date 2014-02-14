@@ -5,6 +5,4 @@ TODO:
 
 -	Increase flexability of item names (especially names with spaces), so something like "rows of chairs" could be reconized as "rows", "chairs", "chair", or "rows of chairs"
 
--	Fix problem with hidden rooms (like under the chairs) saying theres an item somewhere when it has been taken
-
 -	Add signal trapping

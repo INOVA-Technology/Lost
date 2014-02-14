@@ -19,13 +19,13 @@ end
 
 class Room
 
-	attr_accessor :items, :paths, :hidden_rooms
+	attr_accessor :name, :items, :paths, :hidden_room, :description
 
-	def initialize name, description, items={}, hidden_rooms={}
+	def initialize name, description, items={}
 		@name = name
 		@description = description
 		@items = items
-		@hidden_rooms = hidden_rooms
+		@hidden_room = nil
 		@visited = false
 	end
 
@@ -58,8 +58,17 @@ class Room
 	end
 
 	def look_item i
-		if $current_room.hidden_rooms.has_key? i.to_sym
-			puts @hidden_rooms[i.to_sym]
+		if @hidden_room.name.downcase == i
+			puts @hidden_room.description
+			_items = []
+			@items.each_pair { |k, v|
+				next unless v.hidden
+				item = v.name
+				a_or_an = ["a", "e", "i", "o", "u"].include?(item[0].downcase) ? "an" : "a"
+				_items << "#{a_or_an} #{item}"
+			}
+			return if _items.empty?
+			puts "There is #{_items.to_sentence} here."
 		else
 			puts "That item is not here."
 		end
@@ -79,5 +88,9 @@ class Room
 
 	def set_paths paths
 		@paths = paths
+	end
+
+	def set_hidden_room room
+		@hidden_room = room
 	end
 end
