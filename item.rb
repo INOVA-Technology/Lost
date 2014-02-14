@@ -1,9 +1,10 @@
 class Item
 
-	attr_accessor :name
+	attr_accessor :name, :exam
 
-	def initialize name
+	def initialize name, exam
 		@name = name
+		@exam = exam
 	end
 
 end
