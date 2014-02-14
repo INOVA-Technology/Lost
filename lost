@@ -23,23 +23,20 @@ end
 
 
 rooms = {	
-	start: Room.new("Your room", "Theres a closet near by, and a computer. You can tell its very early in the morning by the light out the window. Theres a door to the South.", items = { backpack: Item.new("Backpack", "Not much here... just a backpack", 2) }),	
-	upstairs_hallway: Room.new("Upstairs hallway", "An empty hallway. It continues West and East.", {}),
-	upstairs_hallway_e: Room.new("East side of upstairs hallway", "There is a bathroom to the North.", {}),
-	upstairs_hallway_w: Room.new("West side of upstairs hallway", "There are stairs going down", {}),
-	living_room: Room.new("Living Room", "The upstairs hallway is behind you. The kitchen is to the east and theres a door to the west.", {}) # add kitchen and exit
+	remote_island: Room.new("Remote Island", "There is plane reckage all over.", items = {})
 }
 
-rooms[:start].set_paths({s: rooms[:upstairs_hallway]})
-rooms[:upstairs_hallway].set_paths({n: rooms[:start], e: rooms[:upstairs_hallway_e], w: rooms[:upstairs_hallway_w]})
-rooms[:upstairs_hallway_e].set_paths({w: rooms[:upstairs_hallway]}) # add bathroom to N
-rooms[:upstairs_hallway_w].set_paths({e: rooms[:upstairs_hallway], d: rooms[:living_room]})
-rooms[:living_room].set_paths({u: rooms[:upstairs_hallway_w]}) # add kitchen and exit
+# this should be somewhere
+# backpack: Item.new("Backpack", "Not much here... just a backpack", 2)
+
+rooms[:remote_island].set_paths({})
 
 inventory = {}
 weight = 0
 
-$current_room = rooms[:start]
+$current_room = rooms[:remote_island]
+puts "You where on a plane, and just crashed. You landed on a remote island and don't know where you are."
+puts
 $current_room.enter
 
 while true
