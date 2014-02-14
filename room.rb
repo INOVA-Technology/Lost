@@ -19,12 +19,13 @@ end
 
 class Room
 
-	attr_accessor :items, :paths
+	attr_accessor :items, :paths, :hidden_rooms
 
-	def initialize name, description, items={}
+	def initialize name, description, items={}, hidden_rooms={}
 		@name = name
 		@description = description
 		@items = items
+		@hidden_rooms = hidden_rooms
 		@visited = false
 	end
 
@@ -45,7 +46,6 @@ class Room
 		}
 		return if _items.empty?
 		puts "There is #{_items.to_sentence} in this room."
-
 	end
 	
 	def get_item i
@@ -55,6 +55,14 @@ class Room
 	def look
 		puts @name
 		self.describe
+	end
+
+	def look_item i
+		if $current_room.hidden_rooms.has_key? i.to_sym
+			puts @hidden_rooms[i.to_sym]
+		else
+			puts "That item is not here."
+		end
 	end
 
 	def item_exists i
