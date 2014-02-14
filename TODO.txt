@@ -1,5 +1,4 @@
 TODO:
 -	Fix commands marked with "not working" (examine and drop)
 -	Move .rb files into a require folder, and bin folder
--	Make rooms list the takable items in the room after the description, including items 	 that were droped there
 -	More rooms and better room descriptions

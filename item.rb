@@ -1,10 +1,10 @@
 class Item
 
-	attr_accessor :name, :exam, :weight
+	attr_accessor :name, :examine, :weight, :hidden
 
-	def initialize name, exam, weight, hidden=false
+	def initialize name, examine, weight, hidden=false
 		@name = name
-		@exam = exam
+		@examine = examine
 		@weight = weight
 		@hidden = hidden
 	end
