@@ -82,7 +82,6 @@ while true
 	when "quit"
 		exit
 	else
-		return_val = !return_val
-		puts "Unkown command" unless cmd_exists
+		puts "Unkown command"
 	end
 end
