@@ -53,7 +53,7 @@ while true
 			item_weight = $current_room.get_item(item).weight
 			if weight + item_weight <= max_weight
 				weight += item_weight
-				inventory[:item] = $current_room.get_item(item)
+				inventory[item.to_sym] = $current_room.get_item(item)
 				$current_room.remove_item item
 			else
 				puts "Carrying this item would make your load too heavy"
@@ -83,8 +83,8 @@ while true
 		}
 	when "drop" # not working
 		item = input[1]
-		weight -= $inventory[item.to_sym].weight
-		$current_room.add_item inventory[item.to_sym]
+		weight -= inventory[item.to_sym].weight
+		$current_room.add_item item, inventory[item.to_sym]
 		inventory[item.to_sym].remove_item
 	when "help"
 		puts "Some basic commands to get you started: n, e, s, w, ne, nw, se, sw".magenta

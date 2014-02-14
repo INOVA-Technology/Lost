@@ -69,8 +69,8 @@ class Room
 		@items.has_key? i.to_sym
 	end
 
-	def add_item i
-		@items << i
+	def add_item key, i
+		@items[key.to_sym] = i
 	end
 
 	def remove_item i
