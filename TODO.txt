@@ -1,7 +1,10 @@
 TODO:
 -	Fix commands marked with "not working" (examine and drop)
--	Move .rb files into a require folder, and bin folder
+
 -	More rooms and better room descriptions
--	Increase flexability of item names (especially names with spaces)
--	Fix problem with hidden rooms (like under the chairs) saying theres an item somewhere
-	when it has been taken
+
+-	Increase flexability of item names (especially names with spaces), so something like "rows of chairs" could be reconized as "rows", "chairs", "chair", or "rows of chairs"
+
+-	Fix problem with hidden rooms (like under the chairs) saying theres an item somewhere when it has been taken
+
+-	Add signal trapping

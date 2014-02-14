@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 
-require './room'
-require './item'
-require './colors'
+require './require/room'
+require './require/item'
+require './require/colors'
 
 require "readline"
 
