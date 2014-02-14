@@ -1,0 +1,90 @@
+#!/usr/bin/env ruby
+
+require './room'
+require './item'
+require './colors'
+
+require "readline"
+
+def prompt _prompt="", newline=false
+	_prompt += "\n" if newline
+	inText = Readline.readline(_prompt, true).squeeze(" ").strip
+	inText
+end
+
+def goto_room direction
+	if $current_room.paths.has_key?(direction.to_sym)
+		$current_room = $current_room.paths[direction.to_sym]
+		$current_room.enter
+	else
+		puts "You can't go that way"
+	end 
+end
+
+
+rooms = {	
+	start: Room.new("Your room", "Theres a closet near by, and a computer. You can tell its very early in the morning by the light out the window. Theres a door to the South.", items = { backpack: Item.new("Backpack", "Not much here... just a backpack", 2) }),	
+	upstairs_hallway: Room.new("Upstairs hallway", "An empty hallway. It continues West and East.", {}),
+	upstairs_hallway_e: Room.new("East side of upstairs hallway", "There is a bathroom to the North.", {}),
+	upstairs_hallway_w: Room.new("West side of upstairs hallway", "There are stairs going down", {}),
+	living_room: Room.new("Living Room", "The upstairs hallway is behind you. The kitchen is to the east and theres a door to the west.", {}) # add kitchen and exit
+}
+
+rooms[:start].set_paths({s: rooms[:upstairs_hallway]})
+rooms[:upstairs_hallway].set_paths({n: rooms[:start], e: rooms[:upstairs_hallway_e], w: rooms[:upstairs_hallway_w]})
+rooms[:upstairs_hallway_e].set_paths({w: rooms[:upstairs_hallway]}) # add bathroom to N
+rooms[:upstairs_hallway_w].set_paths({e: rooms[:upstairs_hallway], d: rooms[:living_room]})
+rooms[:living_room].set_paths({u: rooms[:upstairs_hallway_w]}) # add kitchen and exit
+
+inventory = {}
+weight = 0
+
+$current_room = rooms[:start]
+$current_room.enter
+
+while true
+	input = prompt(">").split
+	cmd_exists = false
+	case input[0]
+	when "get", "take"
+		item = input[1]
+		if $current_room.item_exists item
+			max_weight = 15 # Its very likely I'll change these values as more items are added to the game
+			max_weight += 30 if inventory.has_key? :backback
+			item_weight = $current_room.get_item(item).weight
+			if weight + item_weight <= max_weight
+				weight += item_weight
+				inventory[:item] = $current_room.get_item(item)
+				$current_room.remove_item item
+			else
+				puts "Carrying this item would make your load too heavy"
+			end
+		else
+			puts "That item is not in here."
+		end
+	when "look"
+		$current_room.look
+    when "examine", "exam" # not working
+    	item = input[1]
+		puts $inventory[item.to_sym].exam
+	when "n", "s", "e", "w", "ne", "nw", "sw", "se", "d", "u"
+		goto_room input[0]
+	when "i", "inv", "inventory"
+		inventory.each { |k, v|
+			puts v.name
+		}
+	when "drop" # not working
+		item = input[1]
+		weight -= $inventory[item.to_sym].weight
+		$current_room.add_item inventory[item.to_sym]
+		inventory[item.to_sym].remove_item
+	when "help"
+		puts "Some basic commands to get you started: n, e, s, w, ne, nw, se, sw".magenta
+		puts "Those are directions if you didn't understand what any of dat means.".magenta
+		puts "Many commands can be abbreviated or used by typing their first letter.".magenta
+	when "quit"
+		exit
+	else
+		puts "Unkown command"
+	end
+end
