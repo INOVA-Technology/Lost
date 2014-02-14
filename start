@@ -50,7 +50,7 @@ while true
 		item = input[1]
 		if $current_room.item_exists item
 			max_weight = 15 # Its very likely I'll change these values
-			# max_weight += 30 if inventory.includes
+			max_weight += 30 if inventory.has_key? :backback
 			item_weight = $current_room.get_item(item).weight
 			if weight + item_weight <= max_weight
 				weight += item_weight
