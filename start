@@ -22,7 +22,7 @@ end
 
 
 rooms = {
-	start: Room.new("Your room", "Theres a closet near by, and a computer. You can tell its very early in the morning by the light out the window. Theres also a computer in your room, and theres a door to the South.", items = { backpack: Item.new("Backpack") }),	
+	start: Room.new("Your room", "Theres a closet near by, and a computer. You can tell its very early in the morning by the light out the window. Theres a door to the South.", items = { backpack: Item.new("Backpack") }),	
 	upstairs_hallway: Room.new("Upstairs hallway", "An empty hallway. It continues West and East.", {}),
 	upstairs_hallway_e: Room.new("East side of upstairs hallway", "There is a bathroom to the North.", {}),
 	upstairs_hallway_w: Room.new("West side of upstairs hallway", "There are stairs going down", {}),
