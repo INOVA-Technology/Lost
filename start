@@ -22,12 +22,8 @@ def goto_room direction
 end
 
 
-rooms = {
-<<<<<<< HEAD
-	start: Room.new("Your room", "Theres a closet near by, and a computer. You can tell its very early in the morning by the light out the window. Theres a door to the South.", items = { backpack: Item.new("Backpack", 2) }),	
-=======
-	start: Room.new("Your room", "Theres a closet near by, and a computer. You can tell its very early in the morning by the light out the window. Theres a door to the South.", items = { backpack: Item.new("Backpack", "Not much here... just a backpack") }),	
->>>>>>> f7ab37fad123ece8adebc552795ef63ff9c0602f
+rooms = {	
+	start: Room.new("Your room", "Theres a closet near by, and a computer. You can tell its very early in the morning by the light out the window. Theres a door to the South.", items = { backpack: Item.new("Backpack", "Not much here... just a backpack", 2) }),	
 	upstairs_hallway: Room.new("Upstairs hallway", "An empty hallway. It continues West and East.", {}),
 	upstairs_hallway_e: Room.new("East side of upstairs hallway", "There is a bathroom to the North.", {}),
 	upstairs_hallway_w: Room.new("West side of upstairs hallway", "There are stairs going down", {}),
@@ -41,6 +37,7 @@ rooms[:upstairs_hallway_w].set_paths({e: rooms[:upstairs_hallway], d: rooms[:liv
 rooms[:living_room].set_paths({u: rooms[:upstairs_hallway_w]}) # add kitchen and exit
 
 inventory = {}
+weight = 0
 
 $current_room = rooms[:start]
 $current_room.enter
@@ -53,23 +50,24 @@ while true
 		item = input[1]
 		if $current_room.item_exists item
 			max_weight = 15 # Its very likely I'll change these values
-			max_weight += 30 if inventory.includes
-			if @weight + i.weight <= max_weight
+			# max_weight += 30 if inventory.includes
+			item_weight = $current_room.get_item(item).weight
+			if weight + item_weight <= max_weight
+				weight += item_weight
 				inventory[:item] = $current_room.get_item(item)
 				$current_room.remove_item item
 			else
 				puts "Carrying this item would make your load too heavy"
 			end
-			inventory << $current_room.get_item(item)
 		else
 			puts "That item is not in here."
 		end
 	when "look"
 		$current_room.look
     when "examine", "exam", "e"
-    	#item = input[1]
+    	# item = input[1]
     	
-			puts inventory[0].exam
+		# puts inventory[item.to_sym].exam
 	when "n", "s", "e", "w", "ne", "nw", "sw", "se", "d", "u"
 		goto_room input[0]
 	when "i", "inv", "inventory"
