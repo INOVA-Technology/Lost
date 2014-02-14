@@ -11,9 +11,9 @@ def prompt _prompt="", newline=false
 	inText
 end
 
-def goto_room direction, _current_room
-	if _current_room.paths.has_key?(direction.to_sym)
-		$current_room = _current_room.paths[direction.to_sym]
+def goto_room direction
+	if $current_room.paths.has_key?(direction.to_sym)
+		$current_room = $current_room.paths[direction.to_sym]
 		$current_room.enter
 	else
 		puts "You can't go that way"
@@ -55,11 +55,16 @@ while true
 	when "look"
 		$current_room.look
 	when "n", "s", "e", "w", "ne", "nw", "sw", "se", "d", "u"
-		goto_room input[0], $current_room
+		goto_room input[0]
 	when "i", "inv", "inventory"
 		inventory.each { |i|
 			puts i.name
 		}
+	when "help"
+		puts <<-eos
+Some basic commands to get you started: n, e, s, w, ne, nw, se, sw
+Many commands can be abbreviated or used by typing their first letter. 
+			eos
 	when "quit"
 		exit
 	else
