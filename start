@@ -49,7 +49,7 @@ while true
 	when "get", "take"
 		item = input[1]
 		if $current_room.item_exists item
-			max_weight = 15 # Its very likely I'll change these values
+			max_weight = 15 # Its very likely I'll change these values as more items are added to the game
 			max_weight += 30 if inventory.has_key? :backback
 			item_weight = $current_room.get_item(item).weight
 			if weight + item_weight <= max_weight
@@ -64,21 +64,24 @@ while true
 		end
 	when "look"
 		$current_room.look
-    when "examine", "exam", "e"
-    	# item = input[1]
-    	
-		# puts inventory[item.to_sym].exam
+    when "examine", "exam", "e" # not working
+    	item = input[1]
+		puts $inventory[item.to_sym].exam
 	when "n", "s", "e", "w", "ne", "nw", "sw", "se", "d", "u"
 		goto_room input[0]
 	when "i", "inv", "inventory"
 		inventory.each { |k, v|
 			puts v.name
 		}
+	when "drop" # not working
+		item = input[1]
+		weight -= $inventory[item.to_sym].weight
+		$current_room.add_item inventory[item.to_sym]
+		inventory[item.to_sym].remove_item
 	when "help"
 		puts "Some basic commands to get you started: n, e, s, w, ne, nw, se, sw".magenta
 		puts "Those are directions if you didn't understand what any of dat means.".magenta
 		puts "Many commands can be abbreviated or used by typing their first letter.".magenta
-			
 	when "quit"
 		exit
 	else
