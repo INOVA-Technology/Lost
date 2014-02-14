@@ -1,0 +1,69 @@
+#!/usr/bin/env ruby
+
+require './room'
+require './item'
+
+require "readline"
+
+def prompt _prompt="", newline=false
+	_prompt += "\n" if newline
+	inText = Readline.readline(_prompt, true).squeeze(" ").strip
+	inText
+end
+
+def goto_room direction, _current_room
+	if _current_room.paths.has_key?(direction.to_sym)
+		$current_room = _current_room.paths[direction.to_sym]
+		$current_room.enter
+	else
+		puts "You can't go that way"
+	end 
+end
+
+
+rooms = {
+	start: Room.new("Your room", "Theres a closet near by, and a computer. You can tell its very early in the morning by the light out the window. Theres also a computer in your room, and theres a door to the South.", items = { backpack: Item.new("Backpack") }),	
+	upstairs_hallway: Room.new("Upstairs hallway", "An empty hallway. It continues West and East.", {}),
+	upstairs_hallway_e: Room.new("East side of upstairs hallway", "There is a bathroom to the North.", {}),
+	upstairs_hallway_w: Room.new("West side of upstairs hallway", "There are stairs going down", {}),
+	living_room: Room.new("Living Room", "The upstairs hallway behind you. The kitchen is to the east and theres a door to the west.", {}) # add kitchen and exit
+}
+
+rooms[:start].set_paths({s: rooms[:upstairs_hallway]})
+rooms[:upstairs_hallway].set_paths({n: rooms[:start], e: rooms[:upstairs_hallway_e], w: rooms[:upstairs_hallway_w]})
+rooms[:upstairs_hallway_e].set_paths({w: rooms[:upstairs_hallway]}) # add bathroom to N
+rooms[:upstairs_hallway_w].set_paths({e: rooms[:upstairs_hallway], d: rooms[:living_room]})
+rooms[:living_room].set_paths({u: rooms[:upstairs_hallway_w]}) # add kitchen and exit
+
+inventory = []
+
+$current_room = rooms[:start]
+$current_room.enter
+
+while true
+	input = prompt(">").split
+	cmd_exists = false
+	case input[0]
+	when "get", "take"
+		item = input[1]
+		if $current_room.item_exists item
+			inventory << $current_room.get_item(item)
+			$current_room.remove_item item
+		else
+			puts "That item is not in here."
+		end
+	when "look"
+		$current_room.look
+	when "n", "s", "e", "w", "ne", "nw", "sw", "se", "d", "u"
+		goto_room input[0], $current_room
+	when "i", "inv", "inventory"
+		inventory.each { |i|
+			puts i.name
+		}
+	when "quit"
+		exit
+	else
+		return_val = !return_val
+		puts "Unkown command" unless cmd_exists
+	end
+end
