@@ -2,6 +2,7 @@
 
 require './room'
 require './item'
+require './colors'
 
 require "readline"
 
@@ -22,11 +23,15 @@ end
 
 
 rooms = {
+<<<<<<< HEAD
 	start: Room.new("Your room", "Theres a closet near by, and a computer. You can tell its very early in the morning by the light out the window. Theres a door to the South.", items = { backpack: Item.new("Backpack", 2) }),	
+=======
+	start: Room.new("Your room", "Theres a closet near by, and a computer. You can tell its very early in the morning by the light out the window. Theres a door to the South.", items = { backpack: Item.new("Backpack", "Not much here... just a backpack") }),	
+>>>>>>> f7ab37fad123ece8adebc552795ef63ff9c0602f
 	upstairs_hallway: Room.new("Upstairs hallway", "An empty hallway. It continues West and East.", {}),
 	upstairs_hallway_e: Room.new("East side of upstairs hallway", "There is a bathroom to the North.", {}),
 	upstairs_hallway_w: Room.new("West side of upstairs hallway", "There are stairs going down", {}),
-	living_room: Room.new("Living Room", "The upstairs hallway behind you. The kitchen is to the east and theres a door to the west.", {}) # add kitchen and exit
+	living_room: Room.new("Living Room", "The upstairs hallway is behind you. The kitchen is to the east and theres a door to the west.", {}) # add kitchen and exit
 }
 
 rooms[:start].set_paths({s: rooms[:upstairs_hallway]})
@@ -61,6 +66,10 @@ while true
 		end
 	when "look"
 		$current_room.look
+    when "examine", "exam", "e"
+    	#item = input[1]
+    	
+			puts inventory[0].exam
 	when "n", "s", "e", "w", "ne", "nw", "sw", "se", "d", "u"
 		goto_room input[0]
 	when "i", "inv", "inventory"
@@ -68,10 +77,10 @@ while true
 			puts v.name
 		}
 	when "help"
-		puts <<-eos
-Some basic commands to get you started: n, e, s, w, ne, nw, se, sw
-Many commands can be abbreviated or used by typing their first letter. 
-			eos
+		puts "Some basic commands to get you started: n, e, s, w, ne, nw, se, sw".magenta
+		puts "Those are directions if you didn't understand what any of dat means.".magenta
+		puts "Many commands can be abbreviated or used by typing their first letter.".magenta
+			
 	when "quit"
 		exit
 	else
