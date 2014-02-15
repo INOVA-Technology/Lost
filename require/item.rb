@@ -13,10 +13,11 @@ class Item
 	def put _item
 		i = _item.name
 		case @name
-		when "Batterys"
+		when "Batteries"
 			if i == "Radio"
 				_item.options[:power] == true
 				puts "You put batterys in the radio, and turn it on. You hear a strange message in French looping over and over."
+				puts "The message is: Je crois que j'ai quitté ma vie à la maison".magenta
 				_item.set_examine "Manufactured by INOVA Electronics. It is in good condition. You hear a strange message in French looping over and over."
 				return true
 			end
