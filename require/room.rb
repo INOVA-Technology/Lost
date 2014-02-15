@@ -19,13 +19,13 @@ end
 
 class Room
 
-	attr_accessor :name, :items, :paths, :hidden_room, :description
+	attr_accessor :name, :description, :items, :options, :paths, :hidden_room
 
-	def initialize name, description, items={}
+	def initialize name, description, items={}, options={}
 		@name = name
 		@description = description
 		@items = items
-		@hidden_room = nil
+		@options = options
 		@visited = false
 	end
 
@@ -93,5 +93,17 @@ class Room
 
 	def set_hidden_room room
 		@hidden_room = room
+	end
+
+	def leave
+
+		case self.name
+		when "Jungle North"
+			if @options[:bear_alive]
+				puts "A bear comes out of the trees and eats you. You are now dead"
+				exit 1 # add acually function for dying
+			end
+		end
+
 	end
 end

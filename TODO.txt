@@ -7,3 +7,5 @@ TODO:
 -	Add signal trapping
 
 -	Add way to "listen radio"
+
+-	Add a function for when the player dies
