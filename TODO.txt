@@ -1,5 +1,4 @@
 TODO:
--	Fix commands marked with "not working" (examine and drop)
 
 -	More rooms and better room descriptions
 

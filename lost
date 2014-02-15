@@ -23,17 +23,19 @@ end
 
 
 rooms = {	
-	remote_island: Room.new("Remote Island", "There is plane reckage all over."),
+	remote_island: Room.new("Remote Island", "There is plane reckage all over. The beach continues East and West. To the north is a jungle."),
 	remote_island_w: Room.new("Remote Island West", "Just more reckage and scrap metal. Half of the plane you crashed in is to the West. You can also go East to where you landed."),
-	front_half_of_plane: Room.new("Front half of plane", "The light is dim, but you can still see. There are rows of chairs on each side of you, and the cockpit is North West.", { backpack: Item.new("Backpack", "Not much here... just a backpack", 2, true) })
-	cockpit: Room.new("Plane cockpit", "You are in the plane cockpit. The wind shield is shattered, so it is a little dangerous to walk. You can here voices coming from a small box with speakers.", { radio: Item.new("Radio", "Manufactured by INOVA Electronics. It is in good condition.", 3, false ) })
+	# add remote_island_e
+	# add jungle
+	front_half_of_plane: Room.new("Front half of plane", "The light is dim, but you can still see. There are rows of chairs on each side of you, and the cockpit is North West.", { backpack: Item.new("Backpack", "Not much here... just a backpack", 2, true) }),
+	cockpit: Room.new("Plane cockpit", "You are in the plane cockpit. The wind shield is shattered, so it is a little dangerous to walk. You can here voices coming from a small box with speakers.", { radio: Item.new("Radio", "Manufactured by INOVA Electronics. It is in good condition.", 3) })
 
 }
 
-rooms[:remote_island].set_paths({ w: rooms[:remote_island_w] })
+rooms[:remote_island].set_paths({ w: rooms[:remote_island_w] }) # add jungle and remote_island_e
 rooms[:remote_island_w].set_paths({ e: rooms[:remote_island], w: rooms[:front_half_of_plane] })
-rooms[:front_half_of_plane].set_paths({ e: rooms[:remote_island_w] }) # add cockpit
-rooms[:cockpit].set_paths({ s: rooms[:front_half_of_plane] })
+rooms[:front_half_of_plane].set_paths({ e: rooms[:remote_island_w], nw: rooms[:cockpit] })
+rooms[:cockpit].set_paths({ se: rooms[:front_half_of_plane] })
 
 
 rooms[:front_half_of_plane].set_hidden_room(Room.new("Chairs", "Its pretty dirty under these chairs, lots of trash."))
@@ -77,7 +79,7 @@ while true
 		else
 			$current_room.look
 		end
-    when "examine", "exam" # not working, also for thing like "examine chairs" even if chairs cant be taken
+    when "examine", "exam"
     	item = input[1]
 		puts inventory[item.to_sym].examine
 	when "n", "s", "e", "w", "ne", "nw", "sw", "se", "d", "u"
