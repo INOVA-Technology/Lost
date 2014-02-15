@@ -40,7 +40,7 @@ rooms = {
 
 }
 
-rooms[:remote_island].set_paths({ n: rooms[:jungle], e: rooms[:remote_island_e], w: rooms[:remote_island_w],  })
+rooms[:remote_island].set_paths({ n: rooms[:jungle], e: rooms[:remote_island_e], w: rooms[:remote_island_w] })
 rooms[:remote_island_e].set_paths({ w: rooms[:remote_island] })
 rooms[:remote_island_w].set_paths({ e: rooms[:remote_island], w: rooms[:front_half_of_plane] })
 rooms[:front_half_of_plane].set_paths({ e: rooms[:remote_island_w], nw: rooms[:cockpit] })
@@ -67,27 +67,32 @@ while true
 	cmd_exists = false
 	case input[0]
 	when "get", "take"
-		item = input[1]
-		if $current_room.item_exists item
-			max_weight = 15 # Its very likely I'll change these values as more items are added to the game
-			max_weight += 30 if inventory.has_key? :backback
-			item_weight = $current_room.get_item(item).weight
-			if weight + item_weight <= max_weight
-				weight += item_weight
-				inventory[item.to_sym] = $current_room.get_item(item)
-				$current_room.remove_item item
-				puts "You picked up #{item}!".magenta
+		if input[1]
+			item = input[1]
+			if $current_room.item_exists item
+				max_weight = 15 # Its very likely I'll change these values as more items are added to the game
+				max_weight += 30 if inventory.has_key? :backback
+				item_weight = $current_room.get_item(item).weight
+				if weight + item_weight <= max_weight
+					weight += item_weight
+					inventory[item.to_sym] = $current_room.get_item(item)
+					$current_room.remove_item item
+					puts "You picked up #{item}!".magenta
+				else
+					puts "Carrying this item would make your load too heavy".red
+				end
 			else
-				puts "Carrying this item would make your load too heavy".red
+				puts "That item is not in here, or can't be taken.".red
 			end
 		else
-			puts "That item is not in here, or can't be taken.".red
+			puts "Please specify an item to take.".red
 		end
 	when "look"
 		if input[1]
 			item = input[1]
 			if inventory.has_key? item.to_sym
-				# will be the same as examine
+				item = input[1]
+				puts inventory[item.to_sym].examine
 			else
 				$current_room.look_item item
 			end
@@ -95,8 +100,13 @@ while true
 			$current_room.look
 		end
     when "examine", "exam"
-    	item = input[1]
-		puts inventory[item.to_sym].examine
+    	error = "Please specify an item in your inventory to examine".red
+    	if input[1]
+	    	item = inventory[input[1].to_sym]
+			puts (item ? item.examine : error)
+		else
+			puts error
+		end
 	when "n", "s", "e", "w", "ne", "nw", "sw", "se", "d", "u"
 		goto_room input[0]
 	when "i", "inv", "inventory"
@@ -107,16 +117,24 @@ while true
 		if input[1] == "egg"
 			puts "bonjour! Où sont vos pantalons? J'aime la vie. la vie est un plaisir. tout comme ce match. PS4 est mieux que la Xbox un. i luv jeux. paix broseph.".magenta
 		end
-	when "drop" # not working
-		item = input[1]
-		weight -= inventory[item.to_sym].weight
-		$current_room.add_item item, inventory[item.to_sym]
-		inventory.delete item.to_sym
+	when "drop"
+		if input[1]
+			item = input[1]
+			weight -= inventory[item.to_sym].weight
+			$current_room.add_item item, inventory[item.to_sym]
+			inventory.delete item.to_sym
+		else
+			puts "Please specify an item in your inventory to drop.".red
+		end
 	when "put"
-		item_1 = input[1]
-		in_item = input[3]
-		stat = inventory[item_1.to_sym].put inventory[in_item.to_sym]
-		inventory.delete item_1.to_sym if stat # not working
+		if input[1] && input[3]
+			item_1 = input[1]
+			in_item = input[3]
+			stat = inventory[item_1.to_sym].put inventory[in_item.to_sym]
+			inventory.delete item_1.to_sym if stat # not working but i may have fixed idk
+		else
+			puts "Please specify an item to put in another item."
+		end
 	when "help"
 		puts "Some basic commands to get you started: n, e, s, w, ne, nw, se, sw".magenta
 		puts "Those are directions if you didn't understand what any of dat means.".magenta
@@ -124,8 +142,8 @@ while true
 	when "quit"
 		exit
 	when "shoot"
-		# this is be used when they pick up a gun
+		# this will be used when they pick up a gun, to shoot the bear
 	else
-		puts "Unkown command"
+		puts "Unkown command" unless input.empty?
 	end
 end

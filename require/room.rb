@@ -45,7 +45,7 @@ class Room
 			_items << "#{a_or_an} #{item}"
 		}
 		return if _items.empty?
-		puts "There is #{_items.to_sentence} in this room."
+		puts "There is #{_items.to_sentence} here."
 	end
 	
 	def get_item i
@@ -58,19 +58,23 @@ class Room
 	end
 
 	def look_item i
-		if @hidden_room.name.downcase == i
-			puts @hidden_room.description
-			_items = []
-			@items.each_pair { |k, v|
-				next unless v.hidden
-				item = v.name
-				a_or_an = ["a", "e", "i", "o", "u"].include?(item[0].downcase) ? "an" : "a"
-				_items << "#{a_or_an} #{item}"
-			}
-			return if _items.empty?
-			puts "There is #{_items.to_sentence} here."
+		if @hidden_room
+			if @hidden_room.name.downcase == i
+				puts @hidden_room.description
+				_items = []
+				@items.each_pair { |k, v|
+					next unless v.hidden
+					item = v.name
+					a_or_an = ["a", "e", "i", "o", "u"].include?(item[0].downcase) ? "an" : "a"
+					_items << "#{a_or_an} #{item}"
+				}
+				return if _items.empty?
+				puts "There is #{_items.to_sentence} here."
+			else
+				puts "That item is not here."
+			end
 		else
-			puts "That item is not here."
+			puts "That item is not in here."
 		end
 	end
 
