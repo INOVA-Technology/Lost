@@ -94,6 +94,10 @@ while true
 		inventory.each { |k, v|
 			puts v.name
 		}
+	when "easter"
+		if input[1] == "egg"
+			puts "bonjour! Où sont vos pantalons? J'aime la vie. la vie est un plaisir. tout comme ce match. PS4 est mieux que la Xbox un. i luv jeux. paix broseph.".magenta
+		end
 	when "drop" # not working
 		item = input[1]
 		weight -= inventory[item.to_sym].weight
