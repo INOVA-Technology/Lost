@@ -28,7 +28,7 @@ rooms = {
 	# add remote_island_e
 	# add jungle
 	front_half_of_plane: Room.new("Front half of plane", "The light is dim, but you can still see. There are rows of chairs on each side of you, and the cockpit is North West.", { backpack: Item.new("Backpack", "Not much here... just a backpack", 2, true) }),
-	cockpit: Room.new("Plane cockpit", "You are in the plane cockpit. The wind shield is shattered, so it is a little dangerous to walk. There is a small radio that the captian left.", { radio: Item.new("Radio", "Manufactured by INOVA Electronics. It is in good condition, but seems to have no batterys", 3, false, { power: false }) })
+	cockpit: Room.new("Plane cockpit", "You are in the plane cockpit. The wind shield is shattered, so it is a little dangerous to walk. There is a small radio that the captain left.", { radio: Item.new("Radio", "Manufactured by INOVA Electronics. It is in good condition, but seems to have no batteries", 3, false, { power: false }) })
 
 }
 
