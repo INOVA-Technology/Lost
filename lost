@@ -28,7 +28,7 @@ rooms = {
 	# add remote_island_e
 	# add jungle
 	front_half_of_plane: Room.new("Front half of plane", "The light is dim, but you can still see. There are rows of chairs on each side of you, and the cockpit is North West.", { backpack: Item.new("Backpack", "Not much here... just a backpack", 2, true) }),
-	cockpit: Room.new("Plane cockpit", "You are in the plane cockpit. The wind shield is shattered, so it is a little dangerous to walk. You can here voices coming from a small box with speakers.", { radio: Item.new("Radio", "Manufactured by INOVA Electronics. It is in good condition.", 3) })
+	cockpit: Room.new("Plane cockpit", "You are in the plane cockpit. The wind shield is shattered, so it is a little dangerous to walk. There is a small radio that the captian left.", { radio: Item.new("Radio", "Manufactured by INOVA Electronics. It is in good condition, but seems to have no batterys", 3, false, { power: false }) })
 
 }
 
@@ -40,7 +40,10 @@ rooms[:cockpit].set_paths({ se: rooms[:front_half_of_plane] })
 
 rooms[:front_half_of_plane].set_hidden_room(Room.new("Chairs", "Its pretty dirty under these chairs, lots of trash."))
 
-inventory = {}
+# batterys: Item.new("Batterys", "Good for powering things.", 1)
+# this'll need to be somewhere
+
+inventory = { }
 weight = 0
 
 $current_room = rooms[:remote_island]
@@ -92,13 +95,20 @@ while true
 		item = input[1]
 		weight -= inventory[item.to_sym].weight
 		$current_room.add_item item, inventory[item.to_sym]
-		inventory[item.to_sym].remove_item
+		inventory.delete item.to_sym
+	when "put"
+		item_1 = input[1]
+		in_item = input[3]
+		stat = inventory[item_1.to_sym].put inventory[in_item.to_sym]
+		inventory.delete item_1.to_sym if stat # not working
 	when "help"
 		puts "Some basic commands to get you started: n, e, s, w, ne, nw, se, sw".magenta
 		puts "Those are directions if you didn't understand what any of dat means.".magenta
 		puts "Many commands can be abbreviated or used by typing their first letter.".magenta
 	when "quit"
 		exit
+	when ""
+		
 	else
 		puts "Unkown command"
 	end

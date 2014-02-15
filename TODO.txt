@@ -5,3 +5,5 @@ TODO:
 -	Increase flexability of item names (especially names with spaces), so something like "rows of chairs" could be reconized as "rows", "chairs", "chair", or "rows of chairs"
 
 -	Add signal trapping
+
+-	Add way to "listen radio"

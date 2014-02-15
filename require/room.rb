@@ -80,6 +80,7 @@ class Room
 
 	def add_item key, i
 		@items[key.to_sym] = i
+		@items[key.to_sym].unhide 
 	end
 
 	def remove_item i
