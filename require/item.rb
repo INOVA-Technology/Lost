@@ -22,7 +22,7 @@ class Item
 				return true
 			end
 		end
-		puts "You can't do that."
+		puts "You can't do that.".red
 		return false
 	end
 

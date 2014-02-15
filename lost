@@ -27,6 +27,7 @@ rooms = {
 	remote_island_w: Room.new("Remote Island West", "Just more reckage and scrap metal. Half of the plane you crashed in is to the West. You can also go East to where you landed."),
 	# add remote_island_e
 	# add jungle
+	
 	front_half_of_plane: Room.new("Front half of plane", "The light is dim, but you can still see. There are rows of chairs on each side of you, and the cockpit is North West.", { backpack: Item.new("Backpack", "Not much here... just a backpack", 2, true) }),
 	cockpit: Room.new("Plane cockpit", "You are in the plane cockpit. The wind shield is shattered, so it is a little dangerous to walk. There is a small radio that the captain left and some pennies on the ground.", { radio: Item.new("Radio", "Manufactured by INOVA Electronics. It is in good condition, but seems to have no batteriess", 3, false, { power: false }), pennies: Item.new("pennies", "Manufactured in 1993. They are copper coated zinc US pennies.", 1, true), glass: Item.new("Glass", "Ouch, very sharp...", 2, true) })
 	#pennies will be used to make batteries for radio
@@ -67,10 +68,10 @@ while true
 				inventory[item.to_sym] = $current_room.get_item(item)
 				$current_room.remove_item item
 			else
-				puts "Carrying this item would make your load too heavy"
+				puts "Carrying this item would make your load too heavy".red
 			end
 		else
-			puts "That item is not in here, or can't be taken."
+			puts "That item is not in here, or can't be taken.".red
 		end
 	when "look"
 		if input[1]

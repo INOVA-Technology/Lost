@@ -30,7 +30,7 @@ class Room
 	end
 
 	def enter
-		puts @name
+		puts @name.cyan
 		self.describe unless @visited
 		@visited = true
 	end
