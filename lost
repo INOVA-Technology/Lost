@@ -28,15 +28,15 @@ rooms = {
 	remote_island_w: Room.new("Remote Island West", "Just more reckage and scrap metal. Half of the plane you crashed in is to the West. You can also go East to where you landed."),
 	remote_island_e: Room.new("Remote Island East", "Lots of sand. There is a large rock with some writing on it...  The ocean is to the North. You can go back to the crash site if you go West. "),
 	jungle: Room.new("Jungle", "Everything is very green. The trees have large tropical leaves. You think this could mean you are near the equator. The jungle continues North, or you can go back south.", { 
-		leaves: Item.new("Leaves", "These are very thick and big leaves... I wonder wonder what you could make with this...", 2, true) }),
+		leaves: Item.new("Leaves", "These are very thick and big leaves... I wonder wonder what you could make with this...", 2, true, {}, false) }),
 	jungle_n: Room.new("Jungle North", "You are still in the jungle. You hear something moving in the trees. You can't see what it is, but it sounds dangerous. The path goes West, and you can go back South.", {}, { # add whatever will be west of this
 		bear_alive: true }),
 	front_half_of_plane: Room.new("Front half of plane", "The light is dim, but you can still see. There are rows of chairs on each side of you, and the cockpit is North West.", {
-		backpack: Item.new("Backpack", "This will allow you to carry more stuff.", 4, true) }),
+		backpack: Item.new("Backpack", "This will allow you to carry more stuff.", 4, true, {}, true) }),
 	cockpit: Room.new("Plane cockpit", "You are in the plane cockpit. The wind shield is shattered, so it is a little dangerous to walk. There is a small radio that the captain left and some pennies on the ground.", {
-		radio: Item.new("Radio", "Manufactured by INOVA Electronics. It is in good condition, but seems to have no batteries", 3, false, { power: false }),
-		pennies: Item.new("pennies", "Manufactured in 1993. They are copper coated zinc US pennies.", 1), # pennies will be used to make batteries for radio
-		glass: Item.new("Glass", "Ouch, very sharp...", 2, true) })
+		radio: Item.new("Radio", "Manufactured by INOVA Electronics. It is in good condition, but seems to have no batteries", 3, false, { power: false }, true),
+		pennies: Item.new("pennies", "Manufactured in 1993. They are copper coated zinc US pennies.", 1, true, {}, true), # pennies will be used to make batteries for radio
+		glass: Item.new("Glass", "Ouch, very sharp...", 2, true, {}, true) })
 
 }
 
@@ -56,6 +56,7 @@ rooms[:remote_island_e].set_hidden_room(Room.new("Rock", "You can't quite make i
 
 inventory = { }
 weight = 0
+
 
 $current_room = rooms[:remote_island]
 puts "You were on a plane, and just crashed. You landed on a remote island and don't know where you are."
@@ -135,6 +136,12 @@ while true
 		else
 			puts "Please specify an item to put in another item."
 		end
+	when "eat"
+		item = inventory[input[1].to_sym]
+
+		item.eat
+
+		
 	when "help"
 		puts "Some basic commands to get you started: n, e, s, w, ne, nw, se, sw".magenta
 		puts "Those are directions if you didn't understand what any of dat means.".magenta
