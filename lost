@@ -50,6 +50,8 @@ rooms[:jungle_n].set_paths({s: rooms[:jungle]}) # add whatever will be west of t
 
 rooms[:front_half_of_plane].set_hidden_room(Room.new("Chairs", "Its pretty dirty under these chairs, lots of trash."))
 rooms[:remote_island_e].set_hidden_room(Room.new("Rock", "You can't quite make it out... but it looks like a map..."))
+rooms[:jungle_n].set_hidden_room(Room.new("Trees", "It looks like theirs a bear behind those bushes."))
+
 
 # batteries: Item.new("Batteries", "Good for powering things.", 1)
 # this'll need to be somewhere, made with pennies and stuff
