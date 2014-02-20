@@ -9,3 +9,5 @@ TODO:
 -	Add way to "listen radio"
 
 -	Add a function for when the player dies
+
+-	Add gun somewhere so the bear can be killed

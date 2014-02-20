@@ -32,6 +32,7 @@ rooms = {
 	jungle_n: Room.new("Jungle North", "You are still in the jungle. You hear something moving in the trees. You can't see what it is, but it sounds dangerous. The path goes West, and you can go back South.", {}, { # add whatever will be west of this
 		bear_alive: true }),
 	jungle_nw: Room.new("Jungle Northwest", "The Northwest side of the jungle. You can go up a mountian to the North, or you can go back East."), # add mountian
+	mountian: Room.new("Bottom of Mountian", "You are on bottom of a mountian. There is lots of grass, and a dense jungle around you. You can go South, to the forest, or North to continue up the mountian."),
 	front_half_of_plane: Room.new("Front half of plane", "The light is dim, but you can still see. There are rows of chairs on each side of you, and the cockpit is North West.", {
 		backpack: Item.new("Backpack", "This will allow you to carry more stuff.", 4, true, {}, true) }),
 	cockpit: Room.new("Plane cockpit", "You are in the plane cockpit. The wind shield is shattered, so it is a little dangerous to walk. There is a small radio that the captain left and some pennies on the ground.", {
@@ -48,7 +49,8 @@ rooms[:front_half_of_plane].set_paths({ e: rooms[:remote_island_w], nw: rooms[:c
 rooms[:cockpit].set_paths({ se: rooms[:front_half_of_plane] })
 rooms[:jungle].set_paths({n: rooms[:jungle_n], s: rooms[:remote_island] })
 rooms[:jungle_n].set_paths({s: rooms[:jungle], w: rooms[:jungle_nw]})
-rooms[:jungle_nw].set_paths({e: rooms[:jungle_n]}) # add mountian
+rooms[:jungle_nw].set_paths({n: rooms[:mountian], e: rooms[:jungle_n]})
+rooms[:mountian].set_paths({s: rooms[:jungle_nw]})
 
 
 rooms[:front_half_of_plane].set_hidden_room(Room.new("Chairs", "Its pretty dirty under these chairs, lots of trash."))
