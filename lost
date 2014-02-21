@@ -6,6 +6,23 @@ require './require/colors'
 
 require "readline"
 
+def find_item i # dont use yet
+	i.slice!(0)
+	i = i.join(" ")
+	case i
+	when "leaf"
+		"leaves"
+	when "broken glass"
+		"glass"
+	when "small radio"
+		"radio"
+	when "under chairs", "under rows", "under rows of chairs"
+		"chairs"
+	else
+		i
+	end
+end
+
 def prompt _prompt="", newline=false
 	_prompt += "\n" if newline
 	inText = Readline.readline(_prompt, true).squeeze(" ").strip
@@ -157,6 +174,8 @@ while true
 		exit
 	when "shoot"
 		# this will be used when they pick up a gun, to shoot the bear
+	when "test"
+		p find_item input
 	else
 		puts "Unkown command" unless input.empty?
 	end
