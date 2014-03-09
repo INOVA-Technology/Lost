@@ -18,6 +18,8 @@ def find_item i # dont use yet
 		"radio"
 	when "under chairs", "under rows", "under rows of chairs"
 		"chairs"
+	when "writing"
+		"rock"
 	else
 		i
 	end
@@ -44,24 +46,29 @@ rooms = {
 	remote_island: Room.new("Remote Island", "There is plane reckage all over. The beach continues East and West. To the north is a jungle."),
 	remote_island_w: Room.new("Remote Island West", "Just more reckage and scrap metal. Half of the plane you crashed in is to the West. You can also go East to where you landed."),
 	remote_island_e: Room.new("Remote Island East", "Lots of sand. There is a large rock with some writing on it...  The ocean is to the North. You can go back to the crash site if you go West. "),
+	more_beach: Room.new("More Beach", "The beach continues East and West."),
+	even_more_beach: Room.new("Even More Beach", "Theres a lot of beach here.", {
+		pistol: Item.new("Pistol", "This pistol look pretty lethal.", 6, { can_kill: true }) }),
 	jungle: Room.new("Jungle", "Everything is very green. The trees have large tropical leaves. You think this could mean you are near the equator. The jungle continues North, or you can go back south.", { 
-		leaves: Item.new("Leaves", "These are very thick and big leaves... I wonder wonder what you could make with this...", 2, true, {}, false) }),
-	jungle_n: Room.new("Jungle North", "You are still in the jungle. You hear something moving in the trees. You can't see what it is, but it sounds dangerous. The path goes West, and you can go back South.", {}, { # add whatever will be west of this
+		leaves: Item.new("Leaves", "These are very thick and big leaves... I wonder wonder what you could make with this...", 2, { hidden: true, kill: false }) }),
+	jungle_n: Room.new("Jungle North", "You are still in the jungle. You hear something moving in the trees, it sounds dangerous. The path goes West, and you can go back South.", {}, { # add whatever will be west of this
 		bear_alive: true }),
 	jungle_nw: Room.new("Jungle Northwest", "The Northwest side of the jungle. You can go up a mountian to the North, or you can go back East."), # add mountian
 	mountian: Room.new("Bottom of Mountian", "You are on bottom of a mountian. There is lots of grass, and a dense jungle around you. You can go South, to the forest, or North to continue up the mountian."),
 	front_half_of_plane: Room.new("Front half of plane", "The light is dim, but you can still see. There are rows of chairs on each side of you, and the cockpit is North West.", {
-		backpack: Item.new("Backpack", "This will allow you to carry more stuff.", 4, true, {}, true) }),
-	cockpit: Room.new("Plane cockpit", "You are in the plane cockpit. The wind shield is shattered, so it is a little dangerous to walk. There is a small radio that the captain left and some pennies on the ground.", {
-		radio: Item.new("Radio", "Manufactured by INOVA Electronics. It is in good condition, but seems to have no batteries", 3, false, { power: false }, true),
-		pennies: Item.new("pennies", "Manufactured in 1993. They are copper coated zinc US pennies.", 1, true, {}, true), # pennies will be used to make batteries for radio
-		glass: Item.new("Glass", "Ouch, very sharp...", 2, true, {}, true) })
+		backpack: Item.new("Backpack", "This will allow you to carry more stuff.", 4, { hidden: true, kill: true }) }),
+	cockpit: Room.new("Plane cockpit", "You are in the plane cockpit. The wind shield is shattered, so it is a little dangerous to walk. The rest of the plane is South East.", {
+		radio: Item.new("Radio", "Manufactured by INOVA Electronics. It is in good condition, but seems to have no batteries", 3, { power: false, kill: true}),
+		pennies: Item.new("pennies", "Manufactured in 1993. They are copper coated zinc US pennies.", 1, {}), # pennies will be used to make batteries for radio
+		glass: Item.new("Glass", "Ouch, very sharp...", 2, { hidden: true, kill: true }) })
 
 }
 
 rooms[:remote_island].set_paths({ n: rooms[:jungle], e: rooms[:remote_island_e], w: rooms[:remote_island_w] })
-rooms[:remote_island_e].set_paths({ w: rooms[:remote_island] })
+rooms[:remote_island_e].set_paths({ e: rooms[:more_beach] ,w: rooms[:remote_island] })
 rooms[:remote_island_w].set_paths({ e: rooms[:remote_island], w: rooms[:front_half_of_plane] })
+rooms[:more_beach].set_paths({ e: rooms[:even_more_beach], w: rooms[:remote_island_e]})
+rooms[:even_more_beach].set_paths({ w: rooms[:more_beach] })
 rooms[:front_half_of_plane].set_paths({ e: rooms[:remote_island_w], nw: rooms[:cockpit] })
 rooms[:cockpit].set_paths({ se: rooms[:front_half_of_plane] })
 rooms[:jungle].set_paths({n: rooms[:jungle_n], s: rooms[:remote_island] })
@@ -72,7 +79,7 @@ rooms[:mountian].set_paths({s: rooms[:jungle_nw]})
 
 rooms[:front_half_of_plane].set_hidden_room(Room.new("Chairs", "Its pretty dirty under these chairs, lots of trash."))
 rooms[:remote_island_e].set_hidden_room(Room.new("Rock", "You can't quite make it out... but it looks like a map..."))
-rooms[:jungle_n].set_hidden_room(Room.new("Trees", "It looks like theirs a bear behind those bushes."))
+rooms[:jungle_n].set_hidden_room(Room.new("Trees", "It looks like there's a bear behind those trees."))
 
 
 # batteries: Item.new("Batteries", "Good for powering things.", 1)
@@ -140,7 +147,13 @@ while true
 		}
 	when "easter"
 		if input[1] == "egg"
-			puts "bonjour! Où sont vos pantalons? J'aime la vie. la vie est un plaisir. tout comme ce match. PS4 est mieux que la Xbox un. i luv jeux. paix broseph.".magenta
+			r = Random.new.rand(0..1)
+			case r
+			when 0
+				puts "And flying ice cream truck falls from the sky and kills you. Jk" if input[1] == "egg"
+			else
+				puts "bonjour! Où sont vos pantalons? J'aime la vie. la vie est un plaisir. tout comme ce match. PS4 est mieux que la Xbox un. i luv jeux. paix broseph."
+			end
 		end
 	when "drop"
 		if input[1]
@@ -173,7 +186,18 @@ while true
 	when "quit"
 		exit
 	when "shoot"
-		# this will be used when they pick up a gun, to shoot the bear
+		if inventory.has_key? :pistol
+			case input[1]
+			when "bear"
+				if $current_room == rooms[:jungle_n]
+					$current_room.options[:bear_alive] = false
+					$current_room.hidden_room.description = "Nothing here."
+					puts "BANG! You kiled the bear"
+				end
+			end
+		else
+			puts "You don't have anything to shoot with."
+		end
 	when "test"
 		p find_item input
 	else

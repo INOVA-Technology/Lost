@@ -1,14 +1,13 @@
 class Item
 
-	attr_accessor :name, :examine, :weight, :hidden, :options, :kill
+	attr_accessor :name, :examine, :weight, :options
 
-	def initialize name, examine, weight, hidden=false, options={}, kill
+	def initialize name, examine, weight, options={}
 		@name = name
 		@examine = examine
 		@weight = weight
-		@hidden = hidden
 		@options = options
-		@kill = kill
+		@options[:hidden] ||= false
 	end
 
 	def put _item
@@ -31,28 +30,23 @@ class Item
 		@examine = e
 	end
 
+	def hidden
+		@options[:hidden]
+	end
+
 	def unhide
 		@hidden = false
 	end
 
 	def eat a
-		if @kill == true
-
+		if @options[:kill] == true
 			puts "You forcefully shoved a #{a} down your throat.  This made you die. LOL Y U DO DAT?".red
 			exit
-		
-		elsif @kill == false
+		elsif @option[:kill] == false
 			puts "YUMMY YUMMY! You just ate the #{a}!".cyan
-			
-
 		else
-
 			puts "Hmmm... Don't think you can fit that in your mouth..."
-
 		end
-
-
-
 	end
 
 end

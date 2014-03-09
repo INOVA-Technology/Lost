@@ -53,7 +53,7 @@ class Room
 	end
 
 	def look
-		puts @name
+		puts @name.cyan
 		self.describe
 	end
 
