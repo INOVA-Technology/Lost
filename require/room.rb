@@ -48,9 +48,11 @@ class Room
 		puts "There is #{_items.to_sentence} here."
 	end
 	
-	def get_item i
+	def [] i
 		self.items[i.to_sym]
 	end
+
+	alias_method :get_item, :[]
 
 	def look
 		puts @name.cyan
@@ -63,7 +65,7 @@ class Room
 				puts @hidden_room.description
 				_items = []
 				@items.each_pair { |k, v|
-					next unless v.hidden
+					next unless v.options.hidden
 					item = v.name
 					a_or_an = ["a", "e", "i", "o", "u"].include?(item[0].downcase) ? "an" : "a"
 					_items << "#{a_or_an} #{item}"
@@ -71,10 +73,10 @@ class Room
 				return if _items.empty?
 				puts "There is #{_items.to_sentence} here."
 			else
-				puts "That item is not here."
+				puts "That item is not here.".red
 			end
 		else
-			puts "That item is not in here."
+			puts "That item is not in here.".red
 		end
 	end
 
@@ -82,10 +84,12 @@ class Room
 		@items.has_key? i.to_sym
 	end
 
-	def add_item key, i
-		@items[key.to_sym] = i
-		@items[key.to_sym].unhide 
+	def []= key, item
+		@items[key.to_sym] = item
+		@items[key.to_sym].unhide
 	end
+
+	alias_method :add_item, :[]=
 
 	def remove_item i
 		@items.delete i.to_sym

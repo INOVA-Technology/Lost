@@ -3,6 +3,7 @@
 require './require/room'
 require './require/item'
 require './require/colors'
+require './require/cli'
 
 require "readline"
 
@@ -31,17 +32,6 @@ def prompt _prompt="", newline=false
 	inText
 end
 
-def goto_room direction
-	if $current_room.paths.has_key?(direction.to_sym)
-		$current_room.leave
-		$current_room = $current_room.paths[direction.to_sym]
-		$current_room.enter
-	else
-		puts "You can't go that way"
-	end
-end
-
-
 rooms = {	
 	remote_island: Room.new("Remote Island", "There is plane reckage all over. The beach continues East and West. To the north is a jungle."),
 	remote_island_w: Room.new("Remote Island West", "Just more reckage and scrap metal. Half of the plane you crashed in is to the West. You can also go East to where you landed."),
@@ -61,7 +51,6 @@ rooms = {
 		radio: Item.new("Radio", "Manufactured by INOVA Electronics. It is in good condition, but seems to have no batteries", 3, { power: false, kill: true}),
 		pennies: Item.new("pennies", "Manufactured in 1993. They are copper coated zinc US pennies.", 1, {}), # pennies will be used to make batteries for radio
 		glass: Item.new("Glass", "Ouch, very sharp...", 2, { hidden: true, kill: true }) })
-
 }
 
 rooms[:remote_island].set_paths({ n: rooms[:jungle], e: rooms[:remote_island_e], w: rooms[:remote_island_w] })
@@ -85,122 +74,20 @@ rooms[:jungle_n].set_hidden_room(Room.new("Trees", "It looks like there's a bear
 # batteries: Item.new("Batteries", "Good for powering things.", 1)
 # this'll need to be somewhere, made with pennies and stuff
 
-inventory = { }
-weight = 0
-
-
-$current_room = rooms[:remote_island]
-puts "You were on a plane, and just crashed. You landed on a remote island and don't know where you are."
-puts
-$current_room.enter
+cli = Cli.new rooms
 
 while true
 	input = prompt(">").split
 	cmd_exists = false
-	case input[0]
-	when "get", "take"
-		if input[1]
-			item = input[1]
-			if $current_room.item_exists item
-				max_weight = 15 # Its very likely I'll change these values as more items are added to the game
-				max_weight += 30 if inventory.has_key? :backback
-				item_weight = $current_room.get_item(item).weight
-				if weight + item_weight <= max_weight
-					weight += item_weight
-					inventory[item.to_sym] = $current_room.get_item(item)
-					$current_room.remove_item item
-					puts "You picked up #{item}!".magenta
-				else
-					puts "Carrying this item would make your load too heavy".red
-				end
-			else
-				puts "That item is not in here, or can't be taken.".red
-			end
-		else
-			puts "Please specify an item to take.".red
-		end
-	when "look"
-		if input[1]
-			item = input[1]
-			if inventory.has_key? item.to_sym
-				item = input[1]
-				puts inventory[item.to_sym].examine
-			else
-				$current_room.look_item item
-			end
-		else
-			$current_room.look
-		end
-    when "examine", "exam"
-    	error = "Please specify an item in your inventory to examine".red
-    	if input[1]
-	    	item = inventory[input[1].to_sym]
-			puts (item ? item.examine : error)
-		else
-			puts error
-		end
-	when "n", "s", "e", "w", "ne", "nw", "sw", "se", "d", "u"
-		goto_room input[0]
-	when "i", "inv", "inventory"
-		inventory.each { |k, v|
-			puts v.name
-		}
-	when "easter"
-		if input[1] == "egg"
-			r = Random.new.rand(0..1)
-			case r
-			when 0
-				puts "And flying ice cream truck falls from the sky and kills you. Jk" if input[1] == "egg"
-			else
-				puts "bonjour! Où sont vos pantalons? J'aime la vie. la vie est un plaisir. tout comme ce match. PS4 est mieux que la Xbox un. i luv jeux. paix broseph."
-			end
-		end
-	when "drop"
-		if input[1]
-			item = input[1]
-			weight -= inventory[item.to_sym].weight
-			$current_room.add_item item, inventory[item.to_sym]
-			inventory.delete item.to_sym
-		else
-			puts "Please specify an item in your inventory to drop.".red
-		end
-	when "put"
-		if input[1] && input[3]
-			item_1 = input[1]
-			in_item = input[3]
-			stat = inventory[item_1.to_sym].put inventory[in_item.to_sym]
-			inventory.delete item_1.to_sym if stat # not working but i may have fixed idk
-		else
-			puts "Please specify an item to put in another item."
-		end
-	when "eat"
-		item = inventory[input[1].to_sym]
-
-		item.eat
-
-		
-	when "help"
-		puts "Some basic commands to get you started: n, e, s, w, ne, nw, se, sw".magenta
-		puts "Those are directions if you didn't understand what any of dat means.".magenta
-		puts "Many commands can be abbreviated or used by typing their first letter.".magenta
-	when "quit"
-		exit
-	when "shoot"
-		if inventory.has_key? :pistol
-			case input[1]
-			when "bear"
-				if $current_room == rooms[:jungle_n]
-					$current_room.options[:bear_alive] = false
-					$current_room.hidden_room.description = "Nothing here."
-					puts "BANG! You kiled the bear"
-				end
-			end
-		else
-			puts "You don't have anything to shoot with."
-		end
-	when "test"
-		p find_item input
-	else
+	if %w[ take get exam examine drop easter eat shoot ].include? input[0] # command has an argument
+		cli.send input[0], input[1]
+	elsif %w[ i inv inventory look help quit ].include? input[0]
+		cli.send input[0]
+	elsif %w[ n s e w ne nw sw se d u ].include? input[0]
+		cli.goto_room input[0]
+	elsif "put" == input[0]
+		cli.send "put", input[1], input[3]
+	else		
 		puts "Unkown command" unless input.empty?
 	end
 end

@@ -1,6 +1,12 @@
 TODO:
 
--	More rooms and better room descriptions
+-	Fix all the errors I recreated (by things like "take item_thats_not_here")
+
+-	Shoot may or may not work
+
+-	We need tests
+
+-	More rooms and better room descriptions/names
 
 -	Increase flexability of item names (especially names with spaces), so something like "rows of chairs" could be reconized as "rows", "chairs", "chair", or "rows of chairs"
 
